@@ -86,6 +86,8 @@ public class Server implements Runnable {
      */
     public synchronized void removeClient(ClientHandler clientHandler) {
         clients.remove(clientHandler);
+        broadcast("Client " + clientHandler.nickname + " disconnected", clientHandler);
+        System.out.println("Client " + clientHandler.nickname + " disconnected");
         System.out.println("Client disconnected");
         System.out.println("Client count: " + clients.size());
     }

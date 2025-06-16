@@ -15,6 +15,7 @@ public class ClientHandler implements Runnable{
     private BufferedReader reader;
     private BufferedWriter writer;
     private Server server;
+    public String nickname;
 
     /**
      * Constructs a new ClientHandler instance, initializes the socket and corresponding
@@ -156,9 +157,14 @@ public class ClientHandler implements Runnable{
         if (parts.length != 3)
             return false;
 
+        String username = parts[1];
         String password = parts[2];
 
-        return server.passwordValid(password);
+        boolean valid = server.passwordValid(password);
+        if(valid){
+            nickname = username;
+            return true;
+        }else return false;
     }
 
 
