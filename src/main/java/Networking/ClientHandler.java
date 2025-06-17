@@ -46,7 +46,7 @@ public class ClientHandler implements Runnable{
             if (writer != null) writer.close();
             if (socket != null) socket.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            // irrelevant here
         }
     }
     // List for longer messages to be cut into pieces
@@ -103,20 +103,14 @@ public class ClientHandler implements Runnable{
 
     /**
      * Executes the main logic for handling client communication in a separate thread.
-     * This method manages the lifecycle of a client connection, including:
-     * 1. Validating the client's login credentials.
-     * 2. Sending appropriate responses (`LOGIN_SUCCESS` or `LOGIN_FAILED`) based on the validation result.
-     * 3. Continuously reading messages from the client, broadcasting them to other connected clients,
-     *    and processing any exceptions or disconnections.
-     * 4. Ensuring proper cleanup of resources and removal of the client from the server in case of disconnection or error.
+     * This method manages the lifecycle of a client connection.
      *
      */
     @Override
     public void run() {
         try {
-
             String loginAttempt = reader.readLine();
-            if (!validatePassword(loginAttempt)) {
+            if (!validatePassword(loginAttempt) || !server.roomForMoreClients()) {
                 sendMessage("LOGIN_FAILED");
                 terminate();
                 return;
@@ -153,6 +147,7 @@ public class ClientHandler implements Runnable{
     private boolean validatePassword(String message) {
         if (message == null || !message.startsWith("LOGIN:"))
             return false;
+
         String[] parts = message.split(":");
         if (parts.length != 3)
             return false;
@@ -162,10 +157,20 @@ public class ClientHandler implements Runnable{
 
         boolean valid = server.passwordValid(password);
         if(valid){
-            nickname = username;
+            setNickname(username);
             return true;
         }else return false;
     }
 
+    /**
+     * Sets the nickname of the current client and broadcasts a message to all connected clients
+     * indicating that the client has joined.
+     *
+     * @param name the nickname to be assigned to the client
+     */
+    void setNickname(String name){
+        nickname = name;
+        server.broadcast("Client " + name + " joined", this);
+    }
 
 }

@@ -21,6 +21,7 @@ public class Server implements Runnable {
     private final AtomicBoolean running = new AtomicBoolean(false);
 
     private static String password;
+    static int MAX_CLIENTS;
 
     /**
      * Executes the main server logic in a separate thread.
@@ -124,6 +125,15 @@ public class Server implements Runnable {
     }
 
     /**
+     * Checks if there is room for more clients to connect to the server.
+     *
+     * @return true if the current number of clients is less than the maximum allowed limit, false otherwise
+     */
+    public boolean roomForMoreClients(){
+        return clients.size() < MAX_CLIENTS;
+    }
+
+    /**
      * The main entry point of the application. This method prompts the user to enter a password,
      * initializes the server, and starts it on a new thread.
      *
@@ -131,9 +141,16 @@ public class Server implements Runnable {
      */
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
+
         System.out.println("Enter a password to start the server: ");
         password = s.nextLine();
         System.out.println("Password entered: " + password);
+
+        System.out.println("Enter the maximum number of clients: ");
+        MAX_CLIENTS = s.nextInt();
+        if(MAX_CLIENTS < 2)
+            MAX_CLIENTS = 2;
+        System.out.println("Maximum number of clients entered: " + MAX_CLIENTS);
 
         Server server = new Server();
         new Thread(server).start();
