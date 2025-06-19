@@ -68,7 +68,7 @@ public class LoginController {
         client = new Client(
                 message -> Platform.runLater(() -> {
                     if (message.equals("LOGIN_SUCCESS")) {
-                        openChatWindow(); // success
+                        openChatWindow();
                     } else if (message.equals("LOGIN_FAILED")) {
                         errorField.setText("Invalid credentials");
                     }
@@ -102,7 +102,6 @@ public class LoginController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlFiles/Chatting.fxml"));
             Parent root = loader.load();
-
 
             ChattingAppController controller = loader.getController();
             controller.setClient(client);

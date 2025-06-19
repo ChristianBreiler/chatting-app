@@ -4,7 +4,12 @@ import Networking.Client;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class ChattingAppController{
 
@@ -20,8 +25,10 @@ public class ChattingAppController{
     @FXML
     private Button sendButton;
 
+    @FXML
+    private MenuBar leaveMenu;
+
     private Client client;
-    private Thread clientThread;
     String nickname = "";
 
     /**
@@ -75,5 +82,38 @@ public class ChattingAppController{
         this.nickname = nickname;
         Platform.runLater(() -> infoLabel.setText("Connected as " + nickname + " on Port 1234"));
     }
+
+
+    @FXML
+    void close(ActionEvent event) {
+        System.out.println("Closing client");
+
+        // Terminate the client thread and close the socket connection
+        client.running.set(false);
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmlFiles/Login.fxml"));
+            javafx.scene.Parent root = loader.load();
+            LoginController controller = loader.getController();
+            controller.initialize();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/cssFiles/style.css").toExternalForm());
+
+            Stage stage = new Stage();
+            stage.setTitle("Chatting Application");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.show();
+
+            ((Stage) leaveMenu.getScene().getWindow()).close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error while loading login menu");
+        }
+    }
+
+
 
 }

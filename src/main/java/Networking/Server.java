@@ -70,10 +70,11 @@ public class Server implements Runnable {
      */
     public synchronized void broadcast(String message, ClientHandler sender) {
         System.out.println("Broadcasting message: " + message+ " inside the Server class");
+
         for (ClientHandler client : clients) {
                 client.sendMessage(message);
-
         }
+
     }
 
     /**
@@ -93,9 +94,6 @@ public class Server implements Runnable {
         System.out.println("Client count: " + clients.size());
     }
 
-    public int getClientCount(){
-        return clients.size();
-    }
 
     /**
      * Terminates the server by closing the server socket and notifying all connected clients of the shutdown.
@@ -131,6 +129,15 @@ public class Server implements Runnable {
      */
     public boolean roomForMoreClients(){
         return clients.size() < MAX_CLIENTS;
+    }
+
+    /**
+     * Retrieves the current number of connected clients on the server.
+     *
+     * @return the total count of clients currently connected to the server
+     */
+    public int getClientCount(){
+        return clients.size();
     }
 
     /**
