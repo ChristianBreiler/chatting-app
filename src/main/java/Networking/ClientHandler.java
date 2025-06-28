@@ -110,7 +110,12 @@ public class ClientHandler implements Runnable{
     public void run() {
         try {
             String loginAttempt = reader.readLine();
-            if (!validatePassword(loginAttempt) || !server.roomForMoreClients()) {
+            if(!server.roomForMoreClients()){
+                sendMessage("SERVER_FULL");
+                terminate();
+                return;
+            }
+            if (!validatePassword(loginAttempt)) {
                 sendMessage("LOGIN_FAILED");
                 terminate();
                 return;

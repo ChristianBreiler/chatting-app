@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -153,14 +154,20 @@ public class Server implements Runnable {
         password = s.nextLine();
         System.out.println("Password entered: " + password);
 
-        System.out.println("Enter the maximum number of clients: ");
-        MAX_CLIENTS = s.nextInt();
-        if(MAX_CLIENTS < 2)
+        try{
+            System.out.println("Enter the maximum number of clients (2-10) allowed to connect to the server: ");
+            MAX_CLIENTS = s.nextInt();
+        }catch (InputMismatchException e){
+            System.out.println("Invalid input. Defaulting to 2 clients");
+            MAX_CLIENTS = 2;
+        }
+        if(MAX_CLIENTS < 2 ||MAX_CLIENTS > 10)
             MAX_CLIENTS = 2;
         System.out.println("Maximum number of clients entered: " + MAX_CLIENTS);
 
         Server server = new Server();
         new Thread(server).start();
+
     }
 }
 

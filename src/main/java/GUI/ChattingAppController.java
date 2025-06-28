@@ -88,7 +88,6 @@ public class ChattingAppController{
     void close(ActionEvent event) {
         System.out.println("Closing client");
 
-        // Terminate the client thread and close the socket connection
         client.running.set(false);
 
         try {

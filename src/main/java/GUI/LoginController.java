@@ -67,10 +67,16 @@ public class LoginController {
 
         client = new Client(
                 message -> Platform.runLater(() -> {
-                    if (message.equals("LOGIN_SUCCESS")) {
-                        openChatWindow();
-                    } else if (message.equals("LOGIN_FAILED")) {
-                        errorField.setText("Invalid credentials");
+                    switch (message) {
+                        case "SERVER_FULL":
+                            errorField.setText("Server is full");
+                            break;
+                        case "LOGIN_SUCCESS":
+                            openChatWindow();
+                            break;
+                        case "LOGIN_FAILED":
+                            errorField.setText("Invalid credentials");
+                            break;
                     }
                 }),
                 error -> Platform.runLater(() -> {
